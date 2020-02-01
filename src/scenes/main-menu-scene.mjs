@@ -14,6 +14,8 @@ export default class MainMenuScene extends Phaser.Scene {
 		for (let i = 1; i <= PLANET_CHUNK_COUNT; ++i) {
 			this.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
 		}
+
+		this.load.audio('mecha-academy', 'assets/musics/mecha-academy.ogg')
 	}
 
 	create() {
@@ -39,6 +41,9 @@ export default class MainMenuScene extends Phaser.Scene {
 
 		this.cameras.main.setBackgroundColor(0)
 		this.cameras.main.fadeIn(1000, 200, 0, 0)
+
+		this.music = this.sound.add('mecha-academy', { volume: 0.3 })
+		this.music.play({ loop: true, seek: 1.5 })
 	}
 
 	onStartButtonClick(pointer) {
@@ -48,6 +53,7 @@ export default class MainMenuScene extends Phaser.Scene {
 		this.loadingNextScene = true
 		this.cameras.main.fadeOut(500)
 		this.cameras.main.on('camerafadeoutcomplete', () => {
+			this.music.stop()
 			this.scene.start('Level')
 		})
 	}

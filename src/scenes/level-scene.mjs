@@ -12,6 +12,8 @@ export default class IntroScene extends Phaser.Scene {
 		//this.load.image('robot', 'assets/robot.png')
 		this.load.image('sun', 'assets/planet.png')
 		this.load.image('alien', 'assets/robot.png')
+
+		this.load.audio('steampunk-spies', 'assets/musics/steampunk-spies.ogg')
 	}
 
 	create() {
@@ -71,7 +73,10 @@ export default class IntroScene extends Phaser.Scene {
         }
     });
 		sun.setScale(0.1)
-    this.matter.add.mouseSpring();
+		this.matter.add.mouseSpring();
+
+		this.music = this.sound.add('steampunk-spies', { volume: 0.5 })
+		this.music.play({ loop: true, seek: 2.0 })
 	}
 
 	update(timestamp, elapsed) {
