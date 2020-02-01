@@ -10,6 +10,7 @@ export default class IntroScene extends Phaser.Scene {
 		//this.load.image('planet-full', 'assets/planet.png')
 
 		this.load.image('robot', 'assets/robot.png')
+		this.load.audio('steampunk-spies', 'assets/musics/steampunk-spies.ogg')
 	}
 
 	create() {
@@ -25,6 +26,8 @@ export default class IntroScene extends Phaser.Scene {
 		this.cursorKeys = this.input.keyboard.createCursorKeys();
 		// this.robot.setCollideWorldBounds(true);
 
+		this.music = this.sound.add('steampunk-spies', { volume: 0.5 })
+		this.music.play({ loop: true, seek: 2.0 })
 	}
 
 	update(timestamp, elapsed) {
