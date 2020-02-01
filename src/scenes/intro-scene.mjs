@@ -1,4 +1,4 @@
-const PLANET_MAX_HEALTH = 10
+const PLANET_MAX_HEALTH = 15
 
 export default class IntroScene extends Phaser.Scene {
 	constructor() {
@@ -9,6 +9,7 @@ export default class IntroScene extends Phaser.Scene {
 		console.log('[Intro] Preloading')
 
 		this.load.image('planet-full', 'assets/planet.png')
+		this.load.image('dollar', 'assets/dollar.png')
 	}
 
 	create() {
@@ -20,12 +21,9 @@ export default class IntroScene extends Phaser.Scene {
 		this.loadingNextScene = false
 
 		this.planet.setInteractive({ useHandCursor: true })
-		this.planet.on('pointerdown', (pointer) => {
-			if (pointer.button !== 0 || this.loadingNextScene) {
-				return
-			}
-			this.hitPlanet()
-		})
+		this.planet.on('pointerdown', pointer => this.hitPlanet(pointer))
+
+		this.dollars = []
 	}
 
 	update(timestamp, elapsed) {
@@ -34,19 +32,42 @@ export default class IntroScene extends Phaser.Scene {
 
 		const expectedY = this.game.config.height / 2 + Math.cos(timestamp / 1000 * Math.PI) * 20
 		this.planet.y = this.planet.y + (expectedY - this.planet.y) * Math.min(1, elapsed / 150)
+
+		let shouldRebuildDollars = false
+		for (const dollar of this.dollars) {
+			dollar.y -= elapsed / 1000 * 100
+			dollar.alpha -= elapsed / 1000 / 2
+			if (dollar.alpha <= 0) {
+				dollar.destroy()
+				shouldRebuildDollars = true
+			}
+		}
+		if (shouldRebuildDollars) {
+			this.dollars = this.dollars.filter(x => x.active)
+			console.log(this.dollars.length)
+		}
 	}
 
-	hitPlanet() {
+	hitPlanet(pointer) {
+		if (pointer.button !== 0 || this.loadingNextScene) {
+			return
+		}
+
 		this.planetHealth -= 1
 		const red = 0xFF;
 		const green = 0xFF * this.planetHealth / PLANET_MAX_HEALTH
-		const blue = green;
+		const blue = green
 		this.planet.setTint((red << 16) + (green << 8) + blue)
 		if (this.planetHealth === 0) {
 			this.loadNextScene()
 		} else {
 			this.planet.y -= 50
 		}
+
+		const currentMoney = PLANET_MAX_HEALTH - this.planetHealth
+		this.add.image(currentMoney * 32, 32, 'dollar')
+
+		this.dollars.push(this.add.image(pointer.x, pointer.y, 'dollar'))
 	}
 
 	loadNextScene() {

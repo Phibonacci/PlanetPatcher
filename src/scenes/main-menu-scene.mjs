@@ -19,16 +19,6 @@ export default class MainMenuScene extends Phaser.Scene {
 	create() {
 		console.log('[MainMenu] Creating')
 
-		this.add.text(this.game.config.width / 2, this.game.config.height / 4, 'Planet Patcher (TODO: logo)')
-		this.startButton = this.add.text(this.game.config.width / 2, this.game.config.height / 2, 'Play (TODO: triangle)')
-
-		this.loadingNextScene = false
-		this.startButton.setInteractive({ useHandCursor: true })
-		this.startButton.on('pointerdown', pointer => this.onStartButtonClick(pointer))
-
-		this.cameras.main.setBackgroundColor(0)
-		this.cameras.main.fadeIn(1000, 200, 0, 0)
-
 		const centerX = this.game.config.width / 2
 		const centerY = this.game.config.height / 2
 		this.planetCore = this.add.image(centerX, centerY, 'planet-core')
@@ -39,6 +29,16 @@ export default class MainMenuScene extends Phaser.Scene {
 			const y = centerY + (centerY / 2) * Math.sin(Math.PI * 2 * i / PLANET_CHUNK_COUNT)
 			this.chunks.push(this.add.image(x, y, `planet-chunk${i}`))
 		}
+
+		this.add.text(this.game.config.width / 2, this.game.config.height / 4, 'Planet Patcher (TODO: logo)')
+		this.startButton = this.add.text(this.game.config.width / 2, this.game.config.height / 2, 'Play (TODO: triangle)')
+
+		this.loadingNextScene = false
+		this.startButton.setInteractive({ useHandCursor: true })
+		this.startButton.on('pointerdown', pointer => this.onStartButtonClick(pointer))
+
+		this.cameras.main.setBackgroundColor(0)
+		this.cameras.main.fadeIn(1000, 200, 0, 0)
 	}
 
 	onStartButtonClick(pointer) {
