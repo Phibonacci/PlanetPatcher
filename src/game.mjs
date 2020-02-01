@@ -15,6 +15,9 @@ export default class Game extends Phaser.Game {
 					gravity: {
 						scale: 0,
 					},
+					plugins: {
+						attractors: true
+					}
 				},
 			},
 			scene: [IntroScene, MainMenuScene, LevelScene],
