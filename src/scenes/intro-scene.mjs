@@ -13,7 +13,6 @@ export default class IntroScene extends Phaser.Scene {
 		console.log('[Intro] Creating')
 
 		this.planet = this.add.image(500, 300, 'planet-full')
-		this.planet.setScale(0.1)
 
 		this.loadingNextScene = false
 
