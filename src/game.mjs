@@ -11,6 +11,11 @@ export default class Game extends Phaser.Game {
 			pixelArt: true,
 			physics: {
 				default: 'matter',
+				matter: {
+					gravity: {
+						scale: 0,
+					},
+				},
 			},
 			scene: [IntroScene, MainMenuScene, LevelScene],
 		})
