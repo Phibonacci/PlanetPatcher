@@ -10,6 +10,9 @@ export default class IntroScene extends Phaser.Scene {
 
 		this.load.image('planet-full', 'assets/planet.png')
 		this.load.image('dollar', 'assets/dollar.png')
+
+		this.load.audio('coin', 'assets/sounds/coin.wav');
+		this.load.audio('explosion', 'assets/sounds/explosion.wav');
 	}
 
 	create() {
@@ -44,7 +47,6 @@ export default class IntroScene extends Phaser.Scene {
 		}
 		if (shouldRebuildDollars) {
 			this.dollars = this.dollars.filter(x => x.active)
-			console.log(this.dollars.length)
 		}
 	}
 
@@ -59,8 +61,10 @@ export default class IntroScene extends Phaser.Scene {
 		const blue = green
 		this.planet.setTint((red << 16) + (green << 8) + blue)
 		if (this.planetHealth === 0) {
+			this.sound.play('explosion', { volume: 1.0 });
 			this.loadNextScene()
 		} else {
+			this.sound.play('coin', { volume: 0.3 });
 			this.planet.y -= 50
 		}
 
