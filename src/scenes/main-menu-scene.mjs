@@ -89,6 +89,7 @@ export default class MainMenuScene extends Phaser.Scene {
 		if (deltaX < 5 && deltaY < 5 && deltaAngle < 5 || chunk.isStatic()) {
 			if (!chunk.isStatic()) {
 				chunk.setStatic(true)
+				chunk.body.ignorePointer = true
 				this.sound.play('repair', { volume: 1.0 });
 			}
 			chunk.setPosition(this.planetCore.x + expectedPos.x, this.planetCore.y + expectedPos.y)
