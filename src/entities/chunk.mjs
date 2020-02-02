@@ -4,17 +4,32 @@ export default class Chunk {
 			scene.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
 			scene.load.json(`chunk${i}-hitbox`, `assets/chunks/chunk${i}_hitbox.json`)
 		}
+		scene.load.spritesheet(`planet-chunk2_anim`, `assets/chunks/chunk2_anim.png`, { frameWidth: 161, frameHeight: 200})
 	}
 
-	constructor(scene, x, y, chunkType) {
+	constructor(scene, x, y, chunkType, animated) {
 		this.scene = scene
 		this.type = chunkType
 		const shape = scene.cache.json.get(`chunk${chunkType}-hitbox`)[`chunk${chunkType}`]
-		this.sprite = scene.matter.add.image(x, y, `planet-chunk${chunkType}`, null, {
-			shape,
-			isStatic: false,
-			ignorePointer: false,
-		})
+		if (animated) {
+			this.sprite = scene.matter.add.sprite(x, y, `planet-chunk${chunkType}_anim`, null, {
+				shape,
+				isStatic: false,
+				ignorePointer: false,
+			})
+			this.scene.anims.create({
+	            key: 'event',
+	            frames: scene.anims.generateFrameNumbers(`planet-chunk${chunkType}_anim`, { start: 0, end: 3 }),
+	            frameRate: 4,
+	            repeat: -1,
+			})
+		} else {
+			this.sprite = scene.matter.add.sprite(x, y, `planet-chunk${chunkType}`, null, {
+				shape,
+				isStatic: false,
+				ignorePointer: false,
+			})
+		}
 		this.sprite.setMass(Chunk.MASS)
 	}
 

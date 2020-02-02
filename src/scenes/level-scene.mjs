@@ -66,7 +66,13 @@ export default class IntroScene extends Phaser.Scene {
 		this.chunks = []
 		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
 			const pos = Chunk.ORIGINAL_POSITIONS[i - 1]
-			const chunk = new Chunk(this, centerX + pos.x, centerY + pos.y, i)
+			let chunk
+			if (i == 2) {
+				chunk = new Chunk(this, centerX + pos.x, centerY + pos.y, i, true)
+				chunk.sprite.anims.play('event', true)
+			} else {
+				chunk = new Chunk(this, centerX + pos.x, centerY + pos.y, i)
+			}
 			const velocity = Chunk.DESTRUCTION_VELOCITIES[i - 1]
 			chunk.sprite.setVelocity(velocity.x, velocity.y)
 			this.chunks.push(chunk)
