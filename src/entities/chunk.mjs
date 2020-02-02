@@ -9,6 +9,10 @@ export default class Chunk {
 				frameHeight: frameSize.height
 			})
 		}
+		scene.load.spritesheet(`core_anim`, `assets/chunks/core_anim.png`, {
+			frameWidth: 88,
+			frameHeight: 96
+		})
 	}
 
 	constructor(scene, x, y, chunkType) {

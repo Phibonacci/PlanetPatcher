@@ -79,11 +79,18 @@ export default class IntroScene extends Phaser.Scene {
 		}
 		this.chunkBodies = this.chunks.map(x => x.sprite.body)
 
-		this.planetCore = this.matter.add.image(centerX, centerY, 'planet-core', null, {
+		this.planetCore = this.matter.add.sprite(centerX, centerY, 'planet-core', null, {
 			shape: this.cache.json.get('core-hitbox').core,
 			ignorePointer: true,
 			isStatic: true,
 		})
+		this.anims.create({
+			key: 'core',
+			frames: this.anims.generateFrameNumbers(`core_anim`, { start: 0, end: 3 }),
+			frameRate: 4,
+			repeat: -1,
+		})
+		this.planetCore.anims.play('core', true)
 		this.planetCore.setMass(Chunk.MASS)
 
 		this.chunksPlusCore = [...this.chunks, { sprite: this.planetCore }]
