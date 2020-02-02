@@ -76,6 +76,19 @@ export default class Robot {
 		this.sprite.applyForce(force.scale(this.thruster_speed * elapsed))
 	}
 
+	getClosestChunk(chunks) {
+		let min_distance = null
+		let closest_chunk = null
+		for (const chunk of chunks) {
+			const distance = this.distanceSquareBetweenCenterOfMasses(chunk)
+			if (min_distance === null || min_distance > distance) {
+				min_distance = distance
+				closest_chunk = chunk
+			}
+		}
+		return closest_chunk
+	}
+
 	update(scene, elapsed, chunks) {
 		this.applyGravity(elapsed, chunks)
 		this.applyThruster(scene, elapsed)

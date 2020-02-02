@@ -34,18 +34,18 @@ export default class IntroScene extends Phaser.Scene {
 		this.selectedChunk = null
 
 		this.cursorKeys.space.on('down', () => {
+			const chunk = this.robot.getClosestChunk(this.chunks)
 			const intersections = Phaser.Physics.Matter.Matter.Query.ray(
 				this.chunkBodies,
-				{ x: this.robot.x - 20, y: this.robot.y - 20 },
-				{ x: this.robot.x + 20, y: this.robot.y + 20 },
-				10
+				{ x: this.robot.x, y: this.robot.y },
+				{ x: chunk.x, y: chunk.y },
+				100
 			)
 			if (intersections.length > 0) {
 				console.log(intersections[0].parentA)
-				const chunk = this.chunks.find(x => x.sprite.body === intersections[0].parentA)
 				if (chunk && !chunk.isStatic()) {
 					this.selectedChunk = chunk
-					this.updateRope()
+					this.updateRope(0)
 					this.robotRope.visible = true
 				}
 			}
