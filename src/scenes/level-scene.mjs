@@ -32,6 +32,8 @@ export default class IntroScene extends Phaser.Scene {
 		this.robotRope = this.add.line(0, 0, 0, 0, 0, 0, 0xFFFFFF)
 		this.robotRope.visible = false
 		this.selectedChunk = null
+		this.selectedPoint = null
+		this.rotationSinceSelection = null
 
 		this.cursorKeys.space.on('down', () => {
 			const chunk = this.robot.getClosestChunk(this.chunks)
@@ -42,9 +44,13 @@ export default class IntroScene extends Phaser.Scene {
 				100
 			)
 			if (intersections.length > 0) {
-				console.log(intersections[0].parentA)
+				console.log(intersections[0].supports[0])
 				if (chunk && !chunk.isStatic()) {
 					this.selectedChunk = chunk
+					this.selectedPoint = new Phaser.Math.Vector2(
+						intersections[0].supports[0].x - this.selectedChunk.x,
+						intersections[0].supports[0].y - this.selectedChunk.y)
+						this.rotationSinceSelection = chunk.sprite.rotation
 					this.updateRope(0)
 					this.robotRope.visible = true
 					this.sound.play('jump', { volume: 1 })
@@ -112,7 +118,18 @@ export default class IntroScene extends Phaser.Scene {
 	}
 
 	updateRope(elapsed) {
-		this.robotRope.setTo(this.selectedChunk.x, this.selectedChunk.y, this.robot.x, this.robot.y)
+		const center_to_anchor = new Phaser.Math.Vector2(
+			this.selectedPoint.x + this.selectedChunk.x,
+			this.selectedPoint.y + this.selectedChunk.y)
+		const anchor = Phaser.Math.RotateAround(
+			center_to_anchor,
+			this.selectedChunk.x, this.selectedChunk.y,
+			this.selectedChunk.sprite.rotation - this.rotationSinceSelection)
+
+		this.robotRope.setTo(
+			anchor.x,
+			anchor.y,
+			this.robot.x, this.robot.y)
 		const v = new Phaser.Math.Vector2(
 			this.robot.x - this.selectedChunk.x,
 			this.robot.y - this.selectedChunk.y)
