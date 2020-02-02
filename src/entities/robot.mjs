@@ -26,7 +26,7 @@ export default class Robot {
 		})
 		this.sprite.setMass(1.0)
 		this.sprite.anims.play('giggle', true)
-		this.thruster_speed = 0.00005
+		this.thruster_speed = 0.00003
 	}
 
 	distanceSquareBetweenCenterOfMasses(other) {
