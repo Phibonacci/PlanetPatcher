@@ -1,5 +1,4 @@
 import IntroScene from './scenes/intro-scene.mjs'
-import MainMenuScene from './scenes/main-menu-scene.mjs'
 import LevelScene from './scenes/level-scene.mjs'
 
 export default class Game extends Phaser.Game {
@@ -26,7 +25,7 @@ export default class Game extends Phaser.Game {
 					}
 				},
 			},
-			scene: [IntroScene, MainMenuScene, LevelScene],
+			scene: [IntroScene, LevelScene],
 		})
 	}
 }
