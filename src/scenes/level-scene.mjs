@@ -44,7 +44,6 @@ export default class IntroScene extends Phaser.Scene {
 				100
 			)
 			if (intersections.length > 0) {
-				console.log(intersections[0].supports[0])
 				if (chunk && !chunk.isStatic()) {
 					this.selectedChunk = chunk
 					this.selectedPoint = new Phaser.Math.Vector2(
@@ -140,9 +139,9 @@ export default class IntroScene extends Phaser.Scene {
 			this.robot.x - this.selectedChunk.x,
 			this.robot.y - this.selectedChunk.y)
 		const distance = Phaser.Math.Distance.BetweenPoints(this.selectedChunk, this.robot)
-		v.normalize().scale(elapsed * distance / 100000)
+		v.normalize().scale(elapsed * distance / 1000000)
 		if (distance > 100) {
-			this.selectedChunk.sprite.applyForce(v)
+			this.selectedChunk.sprite.applyForceFrom(anchor, v)
 		}
 	}
 }
