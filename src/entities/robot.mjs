@@ -73,4 +73,12 @@ export default class Robot {
 		this.applyGravity(elapsed, chunks)
 		this.applyThruster(scene, elapsed)
 	}
+
+	get x() {
+		return this.sprite.x
+	}
+
+	get y() {
+		return this.sprite.y
+	}
 }
