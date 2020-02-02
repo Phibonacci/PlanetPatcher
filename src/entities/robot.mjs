@@ -2,12 +2,12 @@ const EPSILON = 0.00001
 
 export default class Robot {
 	static preload(scene) {
-		scene.load.image(scene.load.image('robot', 'assets/robot.png'))
+		scene.load.image('robot', 'assets/robot.png')
 	}
 
 	constructor(scene, x, y) {
 		this.sprite = scene.matter.add.sprite(x, y, 'robot', null, {
-			mass: 0.5,
+			mass: 1.0,
 			ignorePointer: false,
 		})
 		this.thruster_speed = 0.0001
@@ -19,7 +19,7 @@ export default class Robot {
 			other.sprite.centerOfMass.add({ x: other.sprite.x, y: other.sprite.y }))
 	}
 
-	applyGravity(chunks) {
+	applyGravity(elapsed, chunks) {
 		let min_distance = null
 		let min_distance_direction = null
 		for (const chunk of chunks) {
@@ -42,17 +42,14 @@ export default class Robot {
 			} else if (rmass > cmass * 1000) {
 				continue
 			}
-			const force = 0.00001 * rmass * cmass / distance
+			const force = elapsed / 10000 * rmass * cmass / Math.max(100, distance)
 			const force_on_direction = direction.normalize().scale(force)
 			this.sprite.applyForce(force_on_direction)
 		}
-		const velocity = new Phaser.Math.Vector2(
-			this.sprite.body.velocity.x,
-			this.sprite.body.velocity.y)
 		this.sprite.setRotation(min_distance_direction.angle() - Math.PI / 2)
 	}
 
-	applyThruster(scene) {
+	applyThruster(scene, elapsed) {
 		let vx = 0
 		if (scene.cursorKeys.left.isDown) {
 			vx = -this.thruster_speed
@@ -66,11 +63,11 @@ export default class Robot {
 			vy = this.thruster_speed
 		}
 		let force = new Phaser.Math.Vector2(vx, vy)
-		this.sprite.applyForce(force)
+		this.sprite.applyForce(force.scale(elapsed * 0.2))
 	}
 
 	update(scene, elapsed, chunks) {
-		this.applyGravity(chunks)
-		this.applyThruster(scene)
+		this.applyGravity(elapsed, chunks)
+		this.applyThruster(scene, elapsed)
 	}
 }

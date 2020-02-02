@@ -1,4 +1,6 @@
-const PLANET_CHUNK_COUNT = 7
+import Chunk from '../entities/chunk.mjs'
+import Robot from '../entities/robot.mjs'
+
 const PLANET_MAX_HEALTH = 15
 
 export default class IntroScene extends Phaser.Scene {
@@ -9,6 +11,9 @@ export default class IntroScene extends Phaser.Scene {
 	preload() {
 		console.log('[Intro] Preloading')
 
+		Robot.preload(this)
+		Chunk.preload(this)
+
 		this.load.image('planet-full', 'assets/planet.png')
 		this.load.image('dollar', 'assets/dollar.png')
 
@@ -18,10 +23,6 @@ export default class IntroScene extends Phaser.Scene {
 
 		this.load.image('planet-core', 'assets/chunks/core.png')
 		this.load.json('core-hitbox', 'assets/chunks/core_hitbox.json')
-		for (let i = 1; i <= PLANET_CHUNK_COUNT; ++i) {
-			this.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
-			this.load.json(`chunk${i}-hitbox`, `assets/chunks/chunk${i}_hitbox.json`)
-		}
 
 		this.load.audio('mecha-academy', 'assets/musics/mecha-academy.ogg')
 	}
@@ -87,6 +88,6 @@ export default class IntroScene extends Phaser.Scene {
 
 	loadNextScene() {
 		this.loadingNextScene = true
-		this.scene.start('MainMenu')
+		this.scene.start('Level')
 	}
 }

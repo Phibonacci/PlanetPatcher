@@ -1,4 +1,4 @@
-const PLANET_CHUNK_COUNT = 7
+import Chunk from '../entities/chunk.mjs'
 
 const ORIGINAL_POSITIONS = [
 	{ x: -38.4053525650732, y: -99.07659475924805 },
@@ -37,7 +37,7 @@ export default class MainMenuScene extends Phaser.Scene {
 		})
 
 		this.chunks = []
-		for (let i = 1; i <= PLANET_CHUNK_COUNT; ++i) {
+		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
 			const pos = ORIGINAL_POSITIONS[i - 1]
 			const shape = this.cache.json.get(`chunk${i}-hitbox`)[`chunk${i}`]
 			const chunk = this.matter.add.image(
@@ -73,7 +73,7 @@ export default class MainMenuScene extends Phaser.Scene {
 			return
 		}
 
-		this.checkChunkPosition(this.currentTick % PLANET_CHUNK_COUNT)
+		this.checkChunkPosition(this.currentTick % Chunk.PLANET_CHUNK_COUNT)
 
 		if (this.chunks.every(x => x.isStatic())) {
 			this.win()
