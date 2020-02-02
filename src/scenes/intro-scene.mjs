@@ -1,3 +1,4 @@
+const PLANET_CHUNK_COUNT = 7
 const PLANET_MAX_HEALTH = 15
 
 export default class IntroScene extends Phaser.Scene {
@@ -11,8 +12,17 @@ export default class IntroScene extends Phaser.Scene {
 		this.load.image('planet-full', 'assets/planet.png')
 		this.load.image('dollar', 'assets/dollar.png')
 
-		this.load.audio('coin', 'assets/sounds/coin.wav');
-		this.load.audio('explosion', 'assets/sounds/explosion.wav');
+		this.load.audio('coin', 'assets/sounds/coin.wav')
+		this.load.audio('explosion', 'assets/sounds/explosion.wav')
+
+		this.load.image('planet-core', 'assets/chunks/core.png')
+		this.load.json('core-hitbox', 'assets/chunks/core_hitbox.json')
+		for (let i = 1; i <= PLANET_CHUNK_COUNT; ++i) {
+			this.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
+			this.load.json(`chunk${i}-hitbox`, `assets/chunks/chunk${i}_hitbox.json`)
+		}
+
+		this.load.audio('mecha-academy', 'assets/musics/mecha-academy.ogg')
 	}
 
 	create() {
@@ -76,9 +86,6 @@ export default class IntroScene extends Phaser.Scene {
 
 	loadNextScene() {
 		this.loadingNextScene = true
-		this.cameras.main.fadeOut(100, 200, 0, 0)
-		this.cameras.main.on('camerafadeoutcomplete', () => {
-			setTimeout(() => this.scene.start('MainMenu'), 1000)
-		})
+		this.scene.start('MainMenu')
 	}
 }
