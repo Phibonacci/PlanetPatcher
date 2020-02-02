@@ -14,6 +14,7 @@ export default class IntroScene extends Phaser.Scene {
 
 		this.load.audio('coin', 'assets/sounds/coin.wav')
 		this.load.audio('explosion', 'assets/sounds/explosion.wav')
+		this.load.audio('repair', 'assets/sounds/repair.wav')
 
 		this.load.image('planet-core', 'assets/chunks/core.png')
 		this.load.json('core-hitbox', 'assets/chunks/core_hitbox.json')

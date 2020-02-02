@@ -25,12 +25,6 @@ export default class MainMenuScene extends Phaser.Scene {
 		super('MainMenu')
 	}
 
-	preload() {
-		console.log('[MainMenu] Preloading')
-
-		this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor(200, 0, 0))
-	}
-
 	create() {
 		console.log('[MainMenu] Creating')
 
@@ -66,35 +60,24 @@ export default class MainMenuScene extends Phaser.Scene {
 		this.matter.add.mouseSpring()
 		this.matter.world.setBounds(0, 0, game.config.width, game.config.height)
 
-		// this.input.on('pointerdown', () => {
-		// 	for (const chunk of this.chunks) {
-		// 		console.log(chunk.body.label, chunk.x - this.planetCore.x, chunk.y - this.planetCore.y)
-		// 	}
-		// })
-
 		this.timer = 0
 		this.currentTick = 0
-	}
-
-	onStartButtonClick(pointer) {
-		if (pointer.button !== 0 || this.loadingNextScene) {
-			return
-		}
-		this.loadingNextScene = true
-		this.cameras.main.fadeOut(1)
-		this.cameras.main.on('camerafadeoutcomplete', () => {
-			this.music.stop()
-			this.scene.start('Level')
-		})
+		this.loadingNextScene = false
 	}
 
 	update(_, elapsed) {
 		this.timer += elapsed
 		this.currentTick += 1
-		if (this.timer < 1000) {
+
+		if (this.timer < 1000 || this.loadingNextScene) {
 			return
 		}
+
 		this.checkChunkPosition(this.currentTick % PLANET_CHUNK_COUNT)
+
+		if (this.chunks.every(x => x.isStatic())) {
+			this.win()
+		}
 	}
 
 	checkChunkPosition(index) {
@@ -104,9 +87,18 @@ export default class MainMenuScene extends Phaser.Scene {
 		let deltaY = Math.abs((chunk.y - this.planetCore.y) - expectedPos.y)
 		let deltaAngle = Math.abs(chunk.angle % 360)
 		if (deltaX < 5 && deltaY < 5 && deltaAngle < 5 || chunk.isStatic()) {
-			chunk.setStatic(true)
+			if (!chunk.isStatic()) {
+				chunk.setStatic(true)
+				this.sound.play('repair', { volume: 1.0 });
+			}
 			chunk.setPosition(this.planetCore.x + expectedPos.x, this.planetCore.y + expectedPos.y)
 			chunk.setAngle(0)
 		}
+	}
+
+	win() {
+		this.loadingNextScene = true
+		this.music.stop()
+		this.scene.start('Intro')
 	}
 }
