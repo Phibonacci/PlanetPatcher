@@ -89,10 +89,13 @@ export default class Robot {
 		this.sprite.applyForce(force.scale(this.thruster_speed * elapsed))
 	}
 
-	getClosestChunk(chunks) {
+	getClosestNonStaticChunk(chunks) {
 		let min_distance = null
 		let closest_chunk = null
 		for (const chunk of chunks) {
+			if (chunk.isStatic()) {
+				continue
+			}
 			const distance = this.distanceSquareBetweenCenterOfMasses(chunk)
 			if (min_distance === null || min_distance > distance) {
 				min_distance = distance

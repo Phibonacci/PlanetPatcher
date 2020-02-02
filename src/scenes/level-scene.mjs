@@ -36,7 +36,7 @@ export default class IntroScene extends Phaser.Scene {
 		this.rotationSinceSelection = null
 
 		this.cursorKeys.space.on('down', () => {
-			const chunk = this.robot.getClosestChunk(this.chunks)
+			const chunk = this.robot.getClosestNonStaticChunk(this.chunks)
 			const intersections = Phaser.Physics.Matter.Matter.Query.ray(
 				this.chunkBodies,
 				{ x: this.robot.x, y: this.robot.y },
