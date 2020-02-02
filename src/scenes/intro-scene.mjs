@@ -1,4 +1,5 @@
 import Background from '../entities/background.mjs'
+import Title from '../entities/title.mjs'
 import Chunk from '../entities/chunk.mjs'
 import Robot from '../entities/robot.mjs'
 
@@ -13,6 +14,7 @@ export default class IntroScene extends Phaser.Scene {
 		console.log('[Intro] Preloading')
 
 		Background.preload(this)
+		Title.preload(this)
 		Robot.preload(this)
 		Chunk.preload(this)
 
@@ -33,6 +35,7 @@ export default class IntroScene extends Phaser.Scene {
 		console.log('[Intro] Creating')
 
 		this.background = new Background(this)
+		this.title = new Title(this)
 		this.planet = this.add.image(this.game.config.width / 2, this.game.config.height / 2, 'planet-full')
 
 		this.planetHealth = PLANET_MAX_HEALTH
@@ -50,6 +53,12 @@ export default class IntroScene extends Phaser.Scene {
 
 		const expectedY = this.game.config.height / 2 + Math.cos(timestamp / 1000 * Math.PI) * 20
 		this.planet.y = this.planet.y + (expectedY - this.planet.y) * Math.min(1, elapsed / 150)
+
+		const planetExpectedY = 80 + Math.cos((timestamp + 400) / 1000 * Math.PI) * 20
+		this.title.planet.y = this.title.planet.y + (planetExpectedY - this.title.planet.y) * Math.min(1, elapsed / 150)
+
+		const patcherExpectedY = 150 + Math.cos((timestamp + 500) / 1000 * Math.PI) * 20
+		this.title.patcher.y = this.title.patcher.y + (patcherExpectedY - this.title.patcher.y) * Math.min(1, elapsed / 150)
 
 		let shouldRebuildDollars = false
 		for (const dollar of this.dollars) {
@@ -84,7 +93,7 @@ export default class IntroScene extends Phaser.Scene {
 		}
 
 		const currentMoney = PLANET_MAX_HEALTH - this.planetHealth
-		this.add.image(currentMoney * 32, 32, 'dollar')
+		this.add.image(this.game.config.width - (currentMoney * 32), 32, 'dollar')
 
 		this.dollars.push(this.add.image(pointer.x, pointer.y, 'dollar'))
 	}
