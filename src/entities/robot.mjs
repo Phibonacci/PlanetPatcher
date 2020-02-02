@@ -48,7 +48,8 @@ export default class Robot {
 			const force_on_direction = direction.normalize().scale(force)
 			this.sprite.applyForce(force_on_direction)
 		}
-		this.sprite.setRotation(min_distance_direction.angle() - Math.PI / 2)
+		const expectedRotation = min_distance_direction.angle() - Math.PI / 2
+		this.sprite.setRotation(Phaser.Math.Angle.RotateTo(this.sprite.rotation, expectedRotation, elapsed / 1000.0 * 5.0))
 	}
 
 	applyThruster(scene, elapsed) {
