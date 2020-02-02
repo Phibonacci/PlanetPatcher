@@ -1,3 +1,6 @@
+import Robot from '../entities/robot.mjs'
+import Chunk from '../entities/chunk.mjs'
+
 export default class IntroScene extends Phaser.Scene {
 	constructor() {
 		super('Level')
@@ -11,44 +14,27 @@ export default class IntroScene extends Phaser.Scene {
 
 		this.load.image('robot', 'assets/robot.png')
 		this.load.audio('steampunk-spies', 'assets/musics/steampunk-spies.ogg')
+		Robot.preload(this)
+		Chunk.preload(this)
 	}
 
 	create() {
 		console.log('[Level] Creating')
-		this.planet = this.add.image(this.game.config.width / 2, this.game.config.height / 2, 'planet-full')
-		// this.robot = this.physics.add.image(50, 50, 'robot')
-		this.robot = this.add.image(50, 50, 'robot')
-		this.robot.X = 50
-		this.robot.Y = 50
-		this.robot.VX = 0
-		this.robot.VY = 0
-		this.robot.speed = 0.1
+
+		this.robot = new Robot(this, 100, 100)
+		this.chunks = [ new Chunk(this, 200, 200), new Chunk(this, 600, 300) ]
+
 		this.cursorKeys = this.input.keyboard.createCursorKeys();
-		// this.robot.setCollideWorldBounds(true);
 
 		this.music = this.sound.add('steampunk-spies', { volume: 0.5 })
 		this.music.play({ loop: true, seek: 2.0 })
+
+		this.matter.world.setBounds()
 	}
 
-	update(timestamp, elapsed) {
-		if (this.cursorKeys.left.isDown) {
-			this.robot.VX += -this.robot.speed
-		} else if (this.cursorKeys.right.isDown) {
-			this.robot.VX += this.robot.speed
-		}
-		if (this.cursorKeys.up.isDown) {
-			this.robot.VY += -this.robot.speed
-		} else if (this.cursorKeys.down.isDown) {
-			this.robot.VY += this.robot.speed
-		}
-		this.robot.X += this.robot.VX
-		this.robot.Y += this.robot.VY
-		this.robot.setPosition(this.robot.X, this.robot.Y)
-		this.robot.setRotation(-Phaser.Math.Angle.Between(
-			this.robot.getCenter().y,
-			this.robot.getCenter().x,
-			this.planet.getCenter().y,
-			this.planet.getCenter().x
-		))
+	update(_, elapsed) {
+		this.matter.add.mouseSpring();
+
+		this.robot.update(this, elapsed, this.chunks)
 	}
 }
