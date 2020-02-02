@@ -1,3 +1,4 @@
+import Background from '../entities/background.mjs'
 import Robot from '../entities/robot.mjs'
 import Chunk from '../entities/chunk.mjs'
 
@@ -9,6 +10,7 @@ export default class IntroScene extends Phaser.Scene {
 	create() {
 		console.log('[Level] Creating')
 
+		this.background = new Background(this)
 		this.createAndExplodePlanet()
 
 		this.cameras.main.setBackgroundColor(0)

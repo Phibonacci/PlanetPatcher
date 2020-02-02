@@ -1,3 +1,4 @@
+import Background from '../entities/background.mjs'
 import Chunk from '../entities/chunk.mjs'
 import Robot from '../entities/robot.mjs'
 
@@ -11,6 +12,7 @@ export default class IntroScene extends Phaser.Scene {
 	preload() {
 		console.log('[Intro] Preloading')
 
+		Background.preload(this)
 		Robot.preload(this)
 		Chunk.preload(this)
 
@@ -30,6 +32,7 @@ export default class IntroScene extends Phaser.Scene {
 	create() {
 		console.log('[Intro] Creating')
 
+		this.background = new Background(this)
 		this.planet = this.add.image(this.game.config.width / 2, this.game.config.height / 2, 'planet-full')
 
 		this.planetHealth = PLANET_MAX_HEALTH
