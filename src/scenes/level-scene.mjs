@@ -33,21 +33,22 @@ export default class IntroScene extends Phaser.Scene {
 	createAndExplodePlanet() {
 		const centerX = this.game.config.width / 2
 		const centerY = this.game.config.height / 2
+
+		this.chunks = []
+		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
+			const pos = Chunk.ORIGINAL_POSITIONS[i - 1]
+			const chunk = new Chunk(this, centerX + pos.x, centerY + pos.y, i)
+			const velocity = Chunk.DESTRUCTION_VELOCITIES[i - 1]
+			chunk.sprite.setVelocity(velocity.x, velocity.y)
+			this.chunks.push(chunk)
+		}
+
 		this.planetCore = this.matter.add.image(centerX, centerY, 'planet-core', null, {
 			shape: this.cache.json.get(`core-hitbox`).core,
 			ignorePointer: true,
 			isStatic: true,
 		})
 		this.planetCore.setMass(Chunk.MASS)
-
-		this.chunks = []
-		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
-			const pos = Chunk.ORIGINAL_POSITIONS[i - 1]
-			const chunk = new Chunk(this, this.planetCore.x + pos.x, this.planetCore.y + pos.y, i)
-			const velocity = Chunk.DESTRUCTION_VELOCITIES[i - 1]
-			chunk.sprite.setVelocity(velocity.x, velocity.y)
-			this.chunks.push(chunk)
-		}
 
 		this.chunksPlusCore = [...this.chunks, { sprite: this.planetCore }]
 	}
