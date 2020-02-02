@@ -37,6 +37,14 @@ export default class Chunk {
 	isStatic() {
 		return this.sprite.isStatic()
 	}
+
+	get x() {
+		return this.sprite.x
+	}
+
+	get y() {
+		return this.sprite.y
+	}
 }
 
 Chunk.MASS = 30.0

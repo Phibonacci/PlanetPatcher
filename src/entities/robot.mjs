@@ -2,16 +2,23 @@ const EPSILON = 0.00001
 
 export default class Robot {
 	static preload(scene) {
-		scene.load.image('robot', 'assets/robot.png')
+		scene.load.spritesheet('robot', 'assets/robot.png', { frameWidth: 32, frameHeight: 32})
 		scene.load.json('robot-hitbox', 'assets/robot_hitbox.json')
 	}
 
 	constructor(scene, x, y) {
+		scene.anims.create({
+            key: 'giggle',
+            frames: scene.anims.generateFrameNumbers('robot', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1,
+		})
 		this.sprite = scene.matter.add.sprite(x, y, 'robot', null, {
 			shape: scene.cache.json.get('robot-hitbox')['robot'],
 			ignorePointer: false,
 		})
 		this.sprite.setMass(1.0)
+		this.sprite.anims.play('giggle', true)
 		this.thruster_speed = 0.00002
 	}
 
@@ -69,8 +76,29 @@ export default class Robot {
 		this.sprite.applyForce(force.scale(this.thruster_speed * elapsed))
 	}
 
+	getClosestChunk(chunks) {
+		let min_distance = null
+		let closest_chunk = null
+		for (const chunk of chunks) {
+			const distance = this.distanceSquareBetweenCenterOfMasses(chunk)
+			if (min_distance === null || min_distance > distance) {
+				min_distance = distance
+				closest_chunk = chunk
+			}
+		}
+		return closest_chunk
+	}
+
 	update(scene, elapsed, chunks) {
 		this.applyGravity(elapsed, chunks)
 		this.applyThruster(scene, elapsed)
+	}
+
+	get x() {
+		return this.sprite.x
+	}
+
+	get y() {
+		return this.sprite.y
 	}
 }

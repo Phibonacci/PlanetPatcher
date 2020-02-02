@@ -28,6 +28,31 @@ export default class IntroScene extends Phaser.Scene {
 		this.timer = 0
 		this.currentTick = 0
 		this.loadingNextScene = false
+
+		this.robotRope = this.add.line(0, 0, 0, 0, 0, 0, 0xFFFFFF)
+		this.robotRope.visible = false
+		this.selectedChunk = null
+
+		this.cursorKeys.space.on('down', () => {
+			const chunk = this.robot.getClosestChunk(this.chunks)
+			const intersections = Phaser.Physics.Matter.Matter.Query.ray(
+				this.chunkBodies,
+				{ x: this.robot.x, y: this.robot.y },
+				{ x: chunk.x, y: chunk.y },
+				100
+			)
+			if (intersections.length > 0) {
+				console.log(intersections[0].parentA)
+				if (chunk && !chunk.isStatic()) {
+					this.selectedChunk = chunk
+					this.updateRope(0)
+					this.robotRope.visible = true
+				}
+			}
+		})
+		this.cursorKeys.space.on('up', () => {
+			this.robotRope.visible = false
+		})
 	}
 
 	createAndExplodePlanet() {
@@ -42,9 +67,10 @@ export default class IntroScene extends Phaser.Scene {
 			chunk.sprite.setVelocity(velocity.x, velocity.y)
 			this.chunks.push(chunk)
 		}
+		this.chunkBodies = this.chunks.map(x => x.sprite.body)
 
 		this.planetCore = this.matter.add.image(centerX, centerY, 'planet-core', null, {
-			shape: this.cache.json.get(`core-hitbox`).core,
+			shape: this.cache.json.get('core-hitbox').core,
 			ignorePointer: true,
 			isStatic: true,
 		})
@@ -67,6 +93,11 @@ export default class IntroScene extends Phaser.Scene {
 		currentChunk.checkAndUpdatePosition(this.planetCore)
 		if (this.chunks.every(x => x.isStatic())) {
 			this.win()
+			return
+		}
+
+		if (this.robotRope.visible) {
+			this.updateRope(elapsed)
 		}
 	}
 
@@ -74,5 +105,17 @@ export default class IntroScene extends Phaser.Scene {
 		this.loadingNextScene = true
 		this.music.stop()
 		this.scene.start('Intro')
+	}
+
+	updateRope(elapsed) {
+		this.robotRope.setTo(this.selectedChunk.x, this.selectedChunk.y, this.robot.x, this.robot.y)
+		const v = new Phaser.Math.Vector2(
+			this.robot.x - this.selectedChunk.x,
+			this.robot.y - this.selectedChunk.y)
+		const distance = Phaser.Math.Distance.BetweenPoints(this.selectedChunk, this.robot)
+		v.normalize().scale(elapsed * distance / 100000)
+		if (distance > 100) {
+			this.selectedChunk.sprite.applyForce(v)
+		}
 	}
 }
