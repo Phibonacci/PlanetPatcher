@@ -3,6 +3,7 @@ const EPSILON = 0.00001
 export default class Robot {
 	static preload(scene) {
 		scene.load.spritesheet('robot', 'assets/robot.png', { frameWidth: 32, frameHeight: 32})
+		scene.load.spritesheet('robot_propulsor', 'assets/robot_propulsor_animation.png', { frameWidth: 32, frameHeight: 32})
 		scene.load.json('robot-hitbox', 'assets/robot_hitbox.json')
 	}
 
@@ -10,6 +11,12 @@ export default class Robot {
 		scene.anims.create({
             key: 'giggle',
             frames: scene.anims.generateFrameNumbers('robot', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1,
+		})
+		scene.anims.create({
+            key: 'propulse',
+            frames: scene.anims.generateFrameNumbers('robot_propulsor', { start: 0, end: 7 }),
             frameRate: 10,
             repeat: -1,
 		})
@@ -71,6 +78,12 @@ export default class Robot {
 			vy += -1
 		} else if (scene.cursorKeys.down.isDown) {
 			vy += 1
+		}
+
+		if (vx != 0 || vy != 0) {
+			this.sprite.anims.play('propulse', true)
+		} else {
+			this.sprite.anims.play('giggle', true)
 		}
 		let force = new Phaser.Math.Vector2(vx, vy)
 		this.sprite.applyForce(force.scale(this.thruster_speed * elapsed))
