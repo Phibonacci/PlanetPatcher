@@ -19,9 +19,6 @@ export default class Game extends Phaser.Game {
 					debug: false,
 					gravity: {
 						scale: 0,
-					},
-					plugins: {
-						attractors: true
 					}
 				},
 			},
