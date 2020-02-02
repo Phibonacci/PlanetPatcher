@@ -80,15 +80,15 @@ export default class IntroScene extends Phaser.Scene {
 		}
 
 		this.planetHealth -= 1
-		const red = 0xFF;
+		const red = 0xFF
 		const green = 0xFF * this.planetHealth / PLANET_MAX_HEALTH
 		const blue = green
 		this.planet.setTint((red << 16) + (green << 8) + blue)
 		if (this.planetHealth === 0) {
-			this.sound.play('explosion', { volume: 1.0 });
+			this.sound.play('explosion', { volume: 1.0 })
 			this.loadNextScene()
 		} else {
-			this.sound.play('coin', { volume: 0.3 });
+			this.sound.play('coin', { volume: 0.3 })
 			this.planet.y -= 50
 		}
 
