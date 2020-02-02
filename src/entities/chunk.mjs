@@ -3,33 +3,29 @@ export default class Chunk {
 		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
 			scene.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
 			scene.load.json(`chunk${i}-hitbox`, `assets/chunks/chunk${i}_hitbox.json`)
+			const frameSize = Chunk.FRAME_SIZES[i - 1]
+			scene.load.spritesheet(`planet-chunk${i}_anim`, `assets/chunks/chunk${i}_anim.png`, {
+				frameWidth: frameSize.width,
+				frameHeight: frameSize.height
+			})
 		}
-		scene.load.spritesheet(`planet-chunk2_anim`, `assets/chunks/chunk2_anim.png`, { frameWidth: 161, frameHeight: 200})
 	}
 
-	constructor(scene, x, y, chunkType, animated) {
+	constructor(scene, x, y, chunkType) {
 		this.scene = scene
 		this.type = chunkType
 		const shape = scene.cache.json.get(`chunk${chunkType}-hitbox`)[`chunk${chunkType}`]
-		if (animated) {
-			this.sprite = scene.matter.add.sprite(x, y, `planet-chunk${chunkType}_anim`, null, {
-				shape,
-				isStatic: false,
-				ignorePointer: false,
-			})
-			this.scene.anims.create({
-	            key: 'event',
-	            frames: scene.anims.generateFrameNumbers(`planet-chunk${chunkType}_anim`, { start: 0, end: 3 }),
-	            frameRate: 4,
-	            repeat: -1,
-			})
-		} else {
-			this.sprite = scene.matter.add.sprite(x, y, `planet-chunk${chunkType}`, null, {
-				shape,
-				isStatic: false,
-				ignorePointer: false,
-			})
-		}
+		this.sprite = scene.matter.add.sprite(x, y, `planet-chunk${chunkType}_anim`, null, {
+			shape,
+			isStatic: false,
+			ignorePointer: false,
+		})
+		this.scene.anims.create({
+			key: 'event' + chunkType,
+			frames: scene.anims.generateFrameNumbers(`planet-chunk${chunkType}_anim`, { start: 0, end: 3 }),
+			frameRate: 4,
+			repeat: -1,
+		})
 		this.sprite.setMass(Chunk.MASS)
 	}
 
@@ -64,6 +60,16 @@ export default class Chunk {
 
 Chunk.MASS = 30.0
 Chunk.PLANET_CHUNK_COUNT = 7
+
+Chunk.FRAME_SIZES = [
+	{ width: 253, height: 143 },
+	{ width: 161, height: 200 },
+	{ width: 157, height: 115 },
+	{ width: 137, height: 122 },
+	{ width: 127, height: 132 },
+	{ width: 139, height: 109 },
+	{ width: 119, height: 160 },
+]
 
 Chunk.ORIGINAL_POSITIONS = [
 	{ x: -40.405, y: -98.076}, // vert foncé arbre
