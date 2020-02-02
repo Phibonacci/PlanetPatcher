@@ -47,13 +47,15 @@ export default class IntroScene extends Phaser.Scene {
 			chunk.sprite.setVelocity(velocity.x, velocity.y)
 			this.chunks.push(chunk)
 		}
+
+		this.chunksPlusCore = [...this.chunks, { sprite: this.planetCore }]
 	}
 
 	update(_, elapsed) {
 		this.timer += elapsed
 		this.currentTick += 1
 
-		this.robot.update(this, elapsed, this.chunks)
+		this.robot.update(this, elapsed, this.chunksPlusCore)
 
 		if (this.timer < 1000 || this.loadingNextScene) {
 			return

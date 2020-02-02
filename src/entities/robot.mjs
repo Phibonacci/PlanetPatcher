@@ -29,7 +29,7 @@ export default class Robot {
 				chunk.sprite.y - this.sprite.y)
 			if (min_distance === null || min_distance > distance) {
 				min_distance = distance
-				min_distance_direction = direction
+				min_distance_direction = direction.clone()
 			}
 			const rmass = this.sprite.body.mass
 			const cmass = chunk.sprite.body.mass
@@ -37,7 +37,7 @@ export default class Robot {
 				continue
 			}
 			const massesOnDistance = rmass * cmass / distance
-			if (massesOnDistance < this.EPSILON) {
+			if (massesOnDistance < EPSILON) {
 				continue
 			} else if (rmass > cmass * 1000) {
 				continue
