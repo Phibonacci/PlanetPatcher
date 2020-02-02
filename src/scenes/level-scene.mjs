@@ -17,9 +17,9 @@ export default class IntroScene extends Phaser.Scene {
 		this.cameras.main.fadeIn(500, 120, 0, 0)
 
 		this.robot = new Robot(this, 100, 100)
-		this.cursorKeys = this.input.keyboard.createCursorKeys();
+		this.cursorKeys = this.input.keyboard.createCursorKeys()
 
-		this.music = this.sound.add('mecha-academy', { volume: 0.3 })
+		this.music = this.sound.add('mecha-academy', { volume: 0.2 })
 		this.music.play({ loop: true, seek: 1.5 })
 
 		this.matter.world.setBounds()
@@ -47,11 +47,15 @@ export default class IntroScene extends Phaser.Scene {
 					this.selectedChunk = chunk
 					this.updateRope(0)
 					this.robotRope.visible = true
+					this.sound.play('jump', { volume: 1 })
 				}
 			}
 		})
 		this.cursorKeys.space.on('up', () => {
-			this.robotRope.visible = false
+			if (this.robotRope.visible) {
+				this.sound.play('release', { volume: 1 })
+				this.robotRope.visible = false
+			}
 		})
 	}
 
