@@ -1,4 +1,4 @@
-class Chunk {
+export default class Chunk {
 	static preload(scene) {
 		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
 			scene.load.image(`planet-chunk${i}`, `assets/chunks/chunk${i}.png`)
@@ -12,10 +12,10 @@ class Chunk {
 		const shape = scene.cache.json.get(`chunk${chunkType}-hitbox`)[`chunk${chunkType}`]
 		this.sprite = scene.matter.add.image(x, y, `planet-chunk${chunkType}`, null, {
 			shape,
-			mass: 100.0,
 			isStatic: false,
 			ignorePointer: false,
 		})
+		this.sprite.setMass(Chunk.MASS)
 	}
 
 	checkAndUpdatePosition(core) {
@@ -39,6 +39,7 @@ class Chunk {
 	}
 }
 
+Chunk.MASS = 30.0
 Chunk.PLANET_CHUNK_COUNT = 7
 
 Chunk.ORIGINAL_POSITIONS = [
@@ -60,5 +61,3 @@ Chunk.DESTRUCTION_VELOCITIES = [
 	{ x: 10, y: 10 },
 	{ x: 10, y: 10 },
 ]
-
-export default Chunk

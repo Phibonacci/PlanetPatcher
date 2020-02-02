@@ -38,6 +38,7 @@ export default class IntroScene extends Phaser.Scene {
 			ignorePointer: true,
 			isStatic: true,
 		})
+		this.planetCore.setMass(Chunk.MASS)
 
 		this.chunks = []
 		for (let i = 1; i <= Chunk.PLANET_CHUNK_COUNT; ++i) {
