@@ -37,8 +37,8 @@ export default class Chunk {
 		const expectedPos = Chunk.ORIGINAL_POSITIONS[this.type - 1]
 		let deltaX = Math.abs((this.sprite.x - core.x) - expectedPos.x)
 		let deltaY = Math.abs((this.sprite.y - core.y) - expectedPos.y)
-		let deltaAngle = Math.abs(this.sprite.angle % 360)
-		if (deltaX < 5 && deltaY < 5 && deltaAngle < 5 || this.sprite.isStatic()) {
+		let deltaAngle = Math.abs((this.sprite.angle + 360) % 360)
+		if (deltaX < 10 && deltaY < 10 && deltaAngle < 10 || this.sprite.isStatic()) {
 			if (!this.sprite.isStatic()) {
 				this.sprite.setStatic(true)
 				this.sprite.body.ignorePointer = true
